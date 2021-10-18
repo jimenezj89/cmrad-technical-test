@@ -1,0 +1,43 @@
+{
+    "name": "jimenezj89/cmrad-staging-api",
+    "description": "Collective Minds Radiology staging API",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Javier Jiménez",
+            "email": "javier.jimenez.masip@gmail.com",
+        }
+    ],
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "ext-json": "*",
+        "ext-http": "*",
+        "guzzlehttp/guzzle": "^7.3",
+        "monolog/monolog": "^2.3",
+        "php-di/php-di": "^6.3",
+        "slim/psr7": "^1.4",
+        "slim/slim": "^4.8"
+    },
+    "require-dev": {
+        "jangregor/phpstan-prophecy": "^0.8.1",
+        "phpspec/prophecy-phpunit": "^2.0",
+        "phpstan/extension-installer": "^1.1.0",
+        "phpstan/phpstan": "^0.12.99",
+        "phpunit/phpunit": "^9.5.10",
+        "squizlabs/php_codesniffer": "^3.6"
+    },
+    "config": {
+        "process-timeout": 0,
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    }
+}

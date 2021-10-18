@@ -1,0 +1,196 @@
+openapi: 3.0.0
+info:
+  description: "Collective Minds Radiology staging API"
+  version: 1.0.0
+  title: CMRad staging API
+tags:
+  - name: subjects
+    description: Individuals participating in clinical trials
+  - name: enrollments
+    description: Subjects enrolleds in clinical trials
+paths:
+  /subjects:
+    post:
+      tags:
+        - subjects
+      summary: Create a new subject
+      description: "Creates a new subject"
+      parameters:
+        - in: header
+          name: X-customer-id
+          schema:
+            type: string
+          required: true
+      requestBody:
+        $ref: "#/components/requestBodies/Subject"
+      responses:
+        "201":
+          description: Subject created
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/CreateSubjectSuccess"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+  /enrollments:
+    post:
+      tags:
+        - enrollments
+      summary: Enrolls a subject in a project
+      description: Enrolls a subject with an specific rol in a project
+      parameters:
+      - in: header
+        name: X-customer-id
+        schema:
+          type: string
+        required: true
+      requestBody:
+        $ref: "#/components/requestBodies/Enrollment"
+      responses:
+        "201":
+          description: Enrollment created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateEnrollmentSuccess"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+servers:
+  - url: https://staging-api.cmrad.com/v1
+components:
+  requestBodies:
+    Subject:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - id
+              - name
+              - age
+              - height
+              - weight
+            properties:
+              id:
+                type: string
+                example: dd-22-123-x
+              name:
+                type: string
+                example: John Doe
+              age:
+                type: integer
+                minimum: 1
+                example: 32
+              height:
+                type: integer
+                minimum: 0
+                example: 182
+              weight:
+                type: integer
+                minimum: 0
+                example: 95
+      description: Subject that needs to be created
+      required: true
+    Enrollment:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - projectId
+              - subjectId
+              - rol
+            properties:
+              projectId:
+                type: string
+                example: gh-234
+              subjectId:
+                type: string
+                example: dd-22-123-x
+              rol:
+                type: string
+                enum: [control, recipient]
+                example: control
+      description: Enrollment data
+      required: true
+  schemas:
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+          example: gh-234
+    Subject:
+      type: object
+      properties:
+        id:
+          type: string
+          example: dd-22-123-x
+        name:
+          type: string
+          example: John Doe
+        age:
+          type: integer
+          minimum: 0
+          example: 32
+        height:
+          type: integer
+          minimum: 0
+          example: 182
+        weight:
+          type: integer
+          minimum: 0
+          example: 95
+    Enrollment:
+      type: object
+      properties:
+        project:
+          $ref: "#/components/schemas/Project"
+        subject:
+          $ref: "#/components/schemas/Subject"
+        rol:
+          type: string
+          enum: [control, recipient]
+          example: control
+    CreateSubjectSuccess:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 201
+        data:
+          $ref: "#/components/schemas/Subject"
+    CreateEnrollmentSuccess:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 201
+        data:
+          $ref: "#/components/schemas/Enrollment"
+    BadRequestError:
+      type: object
+      required:
+        - statusCode
+      properties:
+        statusCode:
+          type: integer
+          example: 400
+        error:
+          type: object
+          required:
+            - description
+          properties:
+            description:
+              type: string
+              example: Invalid input
+
+

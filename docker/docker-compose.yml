@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  web:
+    build: ./web
+    container_name: cmrad_web
+    ports:
+      - "80:80"
+    volumes:
+      - ../app:/app
+    links:
+      - php
+
+  php:
+    build: ./php
+    container_name: cmrad_php
+    volumes:
+      - ../app:/app
+
+  developer-portal:
+    image: swaggerapi/swagger-ui
+    container_name: cmrad_developer-portal
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../doc:/usr/share/nginx/html/doc
+    environment:
+      API_URL: doc/openapi.yaml
